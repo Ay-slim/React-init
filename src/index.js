@@ -49,6 +49,7 @@ const Game = () => {
     }],
     xIsNext: true,
     stepNumber: 0,
+    changeIndex: null,
   });
 
   const handleClick = (i) => {
@@ -63,6 +64,7 @@ const Game = () => {
       history: history.concat([{squares: squares}]),
       xIsNext: !state.xIsNext,
       stepNumber: history.length,
+      changeIndex: i,
     });
   }
 
@@ -71,6 +73,7 @@ const Game = () => {
       stepNumber: step,
       xIsNext: step % 2 === 0,
       history: state.history,
+      changeIndex: state.changeIndex,
     });
   }
   
@@ -78,7 +81,10 @@ const Game = () => {
   const winner = calculateWinner(current.squares);
   const isDraw = checkForDraw(current.squares);
   const moves = state.history.map((step, move) => {
-    const desc = move ? `Go to move # ${move}` : `Go to game start`;
+    if(move === state.history.length-1){
+      generateCoordinates(state.changeIndex, move)
+    }
+    const desc = move ? `Go to move # ${move}  --  (${coordinatesMap[move]})` : `Go to game start`;
     return (
       <li key={move}>
         <button onClick={()=>{jumpTo(move)}}>{desc}</button>
@@ -131,3 +137,12 @@ const calculateWinner = (squares) => {
 const checkForDraw = (squares) => {
   return !squares.includes(null);
 };
+
+const coordinatesMap = {};
+
+const generateCoordinates = (index, move) => {
+  const column = index % 3;
+  const row = [0, 1, 2].includes(index) ? 0 : [3, 4, 5].includes(index) ? 1 : 2;
+  coordinatesMap[move] = `${column}, ${row}`;
+}
+
