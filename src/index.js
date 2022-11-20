@@ -1,6 +1,5 @@
-import React from 'react';
+import React, {useState} from 'react';
 import ReactDOM from 'react-dom/client';
-import { useState } from 'react';
 import './index.css'
 
 const Square = (props) => {
@@ -42,6 +41,7 @@ const Board = (props) =>  {
     </div>
   );
 }
+
 const Game = () => {
   const [state, setState] = useState({
     history: [{
@@ -76,6 +76,7 @@ const Game = () => {
   
   const current = state.history[state.stepNumber];
   const winner = calculateWinner(current.squares);
+  const isDraw = checkForDraw(current.squares);
   const moves = state.history.map((step, move) => {
     const desc = move ? `Go to move # ${move}` : `Go to game start`;
     return (
@@ -84,12 +85,8 @@ const Game = () => {
       </li>
     )
   })
-  let status;
-  if (winner) {
-    status = 'Winner: ' + winner;
-  } else {
-    status = 'Next player: ' + (state.xIsNext ? 'X' : 'O');
-  }
+  const status = winner ? `Winner: ${winner}` : isDraw ? `Game over - Draw` : `Next player: ${state.xIsNext ? 'X' : 'O'}`;
+
   return (
     <div className="game">
       <div className="game-board">
@@ -130,3 +127,7 @@ const calculateWinner = (squares) => {
     }
   }
 }
+
+const checkForDraw = (squares) => {
+  return !squares.includes(null);
+};
