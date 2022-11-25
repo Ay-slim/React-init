@@ -81,13 +81,15 @@ const Game = () => {
   const winner = calculateWinner(current.squares);
   const isDraw = checkForDraw(current.squares);
   const moves = state.history.map((step, move) => {
-    if(move === state.history.length-1){
+    const latestMove = move === state.history.length-1;
+    const selectedMove = move === state.stepNumber;
+    if(latestMove){
       generateCoordinates(state.changeIndex, move)
     }
     const desc = move ? `Go to move # ${move}  --  (${coordinatesMap[move]})` : `Go to game start`;
     return (
       <li key={move}>
-        <button onClick={()=>{jumpTo(move)}}>{desc}</button>
+        <button onClick={()=>{jumpTo(move)}}>{selectedMove ? <strong>{desc}</strong>: desc}</button>
       </li>
     )
   })
