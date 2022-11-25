@@ -42,6 +42,7 @@ const Game = () => {
     stepNumber: 0,
     changeIndex: null,
   });
+  const [ascending, setDescending] = useState(true);
 
   const handleClick = (i) => {
     const history = state.history.slice(0, state.stepNumber + 1);
@@ -96,8 +97,15 @@ const Game = () => {
         />
       </div>
       <div className="game-info">
-        <div>{ status }</div>
-        <ol>{ moves }</ol>
+        <div className="status-spacing">{ status }</div>
+        <div className="game">
+          <p>{"Reorder:    "}</p>
+          <label className="switch">
+            <input type="checkbox" onChange={()=>{setDescending(!ascending)}}/>
+            <span className="slider round"></span>
+          </label>
+        </div>
+        <ol>{ ascending ? moves : reorderMoves(moves) }</ol>
       </div>
     </div>
   );
@@ -137,5 +145,12 @@ const generateCoordinates = (index, move) => {
   const column = index % 3;
   const row = [0, 1, 2].includes(index) ? 0 : [3, 4, 5].includes(index) ? 1 : 2;
   coordinatesMap[move] = `${column}, ${row}`;
-}
+};
 
+const reorderMoves = (moves) => {
+  const reorderedMoves = [];
+  for(let j=moves.length-1 ; j>=0 ; j--) {
+    reorderedMoves.push(moves[j]);
+  };
+  return reorderedMoves;
+};
