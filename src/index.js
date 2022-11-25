@@ -5,7 +5,7 @@ import './index.css'
 const Square = (props) => {
   return (
     <button 
-      className="square" 
+      className={props.winningSquares.includes(props.squareIndex) ? "square winner" : "square"}
       onClick={() => props.onClick()}>
       {props.value}
     </button>
@@ -19,6 +19,8 @@ const Board = (props) =>  {
         value={props.squares[i]}
         key={i}
         onClick={() => props.onClick(i)}
+        winningSquares={props.winningSquares}
+        squareIndex={i}
       />);
   }
 
@@ -70,7 +72,8 @@ const Game = () => {
   }
   
   const current = state.history[state.stepNumber];
-  const winner = calculateWinner(current.squares);
+  const winnerObject = calculateWinner(current.squares);
+  const winner = winnerObject && winnerObject['player'];
   const isDraw = checkForDraw(current.squares);
   const moves = state.history.map((step, move) => {
     const latestMove = move === state.history.length-1;
@@ -94,6 +97,7 @@ const Game = () => {
           xIsNext={state.xIsNext}
           squares={current.squares}
           onClick={(i) => handleClick(i)}
+          winningSquares={winner ? winnerObject['combo'] : []}
         />
       </div>
       <div className="game-info">
@@ -130,7 +134,7 @@ const calculateWinner = (squares) => {
   for (let winningCombo of lines) {
     const [a, b, c] = winningCombo;
     if (squares[a] && squares[a] === squares[b] && squares[b] === squares[c]) {
-      return squares[a];
+      return { player: squares[a], combo: winningCombo };
     }
   }
 }

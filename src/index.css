@@ -45,6 +45,10 @@ body {
     flex-direction: row;
   }
 
+  .winner {
+    background-color: greenyellow;
+  }
+
   .status-spacing {
     margin-bottom: 10px;
   }
